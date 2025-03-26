@@ -25,7 +25,7 @@ Launch the API
 ## Architecture
 
 📂 GG New Project  
-├── 📂 .husky  
+├── 📂 [.husky](./.husky)
 ├── 📂 config  
 ├── 📂 controllers  
 ├── 📂 models  
