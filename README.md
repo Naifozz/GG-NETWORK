@@ -25,17 +25,15 @@ Launch the API
 ## Architecture
 
 📂 GG New Project  
-├── 📂 [.husky](./.husky)
-
-├── 📂 config  
-├── 📂 controllers  
-├── 📂 models  
-├── 📂 node_modules  
-├── 📂 repositories  
-├── 📂 routes  
-├── 📂 services  
-├── 📂 tests  
-├── 📂 utils  
-├── 📄 .gitignore  
-├── 📦 package.json  
-└── 📖 README.md
+├── 📂 [.husky](./.husky)<br>
+├── 📂 [config](./config)<br>
+├── 📂 [controllers](./controllers) <br>
+├── 📂 [models](./models) <br>
+├── 📂 [repositories](./repositories) <br>
+├── 📂 [routes](./routes) <br>
+├── 📂 [services](./services) <br>
+├── 📂 [tests](./tests) <br>
+├── 📂 [utils](./utils) <br>
+├── 📄 [.gitignore](.gitignore) <br>
+├── 📦 [package.json](package.json) <br>
+└── 📖 [README.md](README.md)<br>
