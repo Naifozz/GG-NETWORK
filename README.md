@@ -21,3 +21,20 @@ Initiate database
 Launch the API
 
 - `npm run dev`, it will become available at http://localhost:3000
+
+## Architecture
+
+📂 GG New Project  
+├── 📂 .husky  
+├── 📂 config  
+├── 📂 controllers  
+├── 📂 models  
+├── 📂 node_modules  
+├── 📂 repositories  
+├── 📂 routes  
+├── 📂 services  
+├── 📂 tests  
+├── 📂 utils  
+├── 📄 .gitignore  
+├── 📦 package.json  
+└── 📖 README.md
