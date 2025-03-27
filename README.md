@@ -28,6 +28,7 @@ Launch the API
 ├── 📂 [.husky](./.husky)<br>
 ├── 📂 [config](./config)<br>
 ├── 📂 [controllers](./controllers) <br>
+├── 📂 [prisma](./hello-prisma) <br>
 ├── 📂 [models](./models) <br>
 ├── 📂 [repositories](./repositories) <br>
 ├── 📂 [routes](./routes) <br>
