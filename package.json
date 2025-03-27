@@ -1,0 +1,58 @@
+{
+  "name": "gg-network",
+  "version": "1.0.0",
+  "description": "Création d'une API REST pour un Reseau social fictif",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "prepare": "npx husky-init && husky install",
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "commit": "cz",
+    "init": "node config/database.js",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,json}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naifozz/GG-NETWORK.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Naifozz/GG-NETWORK/issues"
+  },
+  "homepage": "https://github.com/Naifozz/GG-NETWORK#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/js": "^9.23.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.23.0",
+    "globals": "^16.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "comm": "^0.2.0"
+  }
+}
