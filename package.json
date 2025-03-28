@@ -13,12 +13,14 @@
     "prepare": "npx husky-init && husky install",
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
     "commit": "cz",
     "init": "node config/database.js",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "lint-staged": {
     "*.{js,json}": [
@@ -46,6 +48,7 @@
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@eslint/js": "^9.23.0",
+    "@vitest/ui": "^3.0.9",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.23.0",
@@ -53,7 +56,8 @@
     "husky": "^8.0.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
-    "prisma": "6.5.0"
+    "prisma": "6.5.0",
+    "vitest": "^3.0.9"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

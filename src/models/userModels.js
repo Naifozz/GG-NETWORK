@@ -10,7 +10,7 @@ export const utilisateurSchema = z.object({
     .max(50, {
       message: "Le nom d'utilisateur ne peut pas dépasser 50 caractères",
     })
-    .toLowerCase() // Convertit automatiquement en minuscules
+    .toLowerCase()
     .regex(/^[a-z0-9_]+$/, {
       message:
         "Le nom d'utilisateur ne peut contenir que des lettres minuscules, des chiffres et des underscores",
@@ -23,6 +23,7 @@ export const validateUtilisateur = async (utilisateur) => {
     utilisateurSchema.parse(utilisateur);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      // N'extraire que les messages
       erreur.push(...error.errors.map((err) => err.message));
     }
   }
