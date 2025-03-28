@@ -8,12 +8,12 @@
     "test": "tests"
   },
   "scripts": {
+    "test": "vitest",
     "queries": "ts-node ./src/queries.ts",
     "caching": "ts-node ./src/caching.ts",
     "prepare": "npx husky-init && husky install",
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
     "commit": "cz",
@@ -53,7 +53,8 @@
     "husky": "^8.0.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
-    "prisma": "6.5.0"
+    "prisma": "6.5.0",
+    "vitest": "^3.0.9"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -62,6 +63,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "zod": "^3.24.2"
   }
 }
