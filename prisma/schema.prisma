@@ -9,7 +9,7 @@ generator client {
 
 model Utilisateur {
   ID_Utilisateur       Int                       @id @default(autoincrement())
-  Nom                  String
+  Nom                  String                    @unique
   Pseudo               String
   Email                String                    @unique
   Password             String
@@ -29,6 +29,7 @@ model Utilisateur {
   UserGroupes          UserGroupe[]
   ConcoursUtilisateurs ConcoursUtilisateur[]
   Groupes              Groupe[]                  @relation("UtilisateurGroupe")
+  @@index([Nom])
 }
 
 model Profil {
