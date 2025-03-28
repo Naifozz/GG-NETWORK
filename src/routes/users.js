@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 router.get('/', async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.Utilisateur.findMany();
     res.json(users);
   } catch (error) {
     console.error('Error getting users', error);
