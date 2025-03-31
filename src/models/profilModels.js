@@ -13,7 +13,7 @@ const profilSchema = z.object({
 
 function validateProfil(data) {
   try {
-    return profilSchema.parse(data);
+    return profilSchema.parseAsync(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
       //transforme les erreurs en format lisible
