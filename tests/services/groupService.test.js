@@ -17,8 +17,8 @@ afterEach(() => {
 
 test('✅ Récupération de tous les groupes avec succès', async () => {
   const mockGroups = [
-    { ID_Group: 1, Nom: 'Groupe 1', Etat: 'Public' },
-    { ID_Group: 2, Nom: 'Groupe 2', Etat: 'Prive' },
+    { ID_Group: 1, Nom: 'Groupe 1', Etat: true },
+    { ID_Group: 2, Nom: 'Groupe 2', Etat: false },
   ];
   groupRepository.getGroups.mockResolvedValue(mockGroups);
 
@@ -41,7 +41,7 @@ test("✅ Récupération d'un groupe par ID avec succès", async () => {
     ID_Group: 1,
     Nom: 'Groupe 1',
     Description: 'Description test',
-    Etat: 'Public',
+    Etat: true,
   };
   groupRepository.getGroupById.mockResolvedValue(mockGroup);
 
@@ -91,7 +91,7 @@ test("❌ Échec de la création d'un groupe", async () => {
 });
 
 test("✅ Mise à jour d'un groupe avec succès", async () => {
-  const updateData = { Nom: 'Groupe Modifié' };
+  const updateData = { Nom: 'Groupe Modifié', Etat: true };
   const mockUpdatedGroup = {
     ID_Group: 1,
     Nom: 'Groupe Modifié',
@@ -107,7 +107,7 @@ test("✅ Mise à jour d'un groupe avec succès", async () => {
 });
 
 test("❌ Échec de la mise à jour d'un groupe", async () => {
-  const updateData = { Nom: 'Groupe Modifié' };
+  const updateData = { Nom: 'Groupe Modifié', Etat: true };
   const error = new Error('Erreur lors de la mise à jour du groupe');
   groupRepository.updateGroup.mockRejectedValue(error);
 
