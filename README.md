@@ -30,10 +30,10 @@ Launch the API
 ├── 📂 [controllers](./controllers) <br>
 ├── 📂 [prisma](./hello-prisma) <br>
 ├── 📂 [src](./src) <br>
-&emsp;&emsp; ├── 📂 [models](./models) <br>
-&emsp;&emsp; ├── 📂 [repositories](./repositories) <br>
-&emsp;&emsp; ├── 📂 [routes](./routes) <br>
-&emsp;&emsp; └──📂 [services](./services) <br>
+&emsp;&emsp; ├── 📂 [models](./src/models) <br>
+&emsp;&emsp; ├── 📂 [repositories](./src/repositories) <br>
+&emsp;&emsp; ├── 📂 [routes](./src/routes) <br>
+&emsp;&emsp; └──📂 [services](./src/services) <br>
 ├── 📂 [tests](./tests) <br>
 ├── 📂 [utils](./utils) <br>
 ├── 📄 [.gitignore](.gitignore) <br>
