@@ -24,20 +24,18 @@ Launch the API
 
 ## Architecture
 
-<pre>
 📂 GG New Project  
 ├── 📂 [.husky](./.husky)<br>
 ├── 📂 [config](./config)<br>
 ├── 📂 [controllers](./controllers) <br>
 ├── 📂 [prisma](./hello-prisma) <br>
 ├── 📂 [src](./src) <br>
-    ├── 📂 [models](./models) <br>
-    ├── 📂 [repositories](./repositories) <br>
-    ├── 📂 [routes](./routes) <br>
-    └──📂 [services](./services) <br>
+&emsp;&emsp; ├── 📂 [models](./models) <br>
+&emsp;&emsp; ├── 📂 [repositories](./repositories) <br>
+&emsp;&emsp; ├── 📂 [routes](./routes) <br>
+&emsp;&emsp; └──📂 [services](./services) <br>
 ├── 📂 [tests](./tests) <br>
 ├── 📂 [utils](./utils) <br>
 ├── 📄 [.gitignore](.gitignore) <br>
 ├── 📦 [package.json](package.json) <br>
 └── 📖 [README.md](README.md)<br>
-<pre>
