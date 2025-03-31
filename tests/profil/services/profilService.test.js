@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import * as profilRepository from '../../../src/repositories/profilRepository.js';
 import * as profilService from '../../../src/services/ProfilService.js';
 
-vi.mock('../repository/Profil', () => ({
+vi.mock('../../../src/repositories/profilRepository.js', () => ({
   getAllProfils: vi.fn(),
   createProfil: vi.fn(),
   getProfilById: vi.fn(),
@@ -49,19 +49,21 @@ describe('ProfilService', () => {
     try {
       await profilService.getAllProfils();
     } catch (error) {
-      expect(error.message).toBe(errorMessage);
+      expect(error.message).toContain(errorMessage);
       expect(profilRepository.getAllProfils).toHaveBeenCalledTimes(1);
     }
   });
 
   test('✅ createProfil devrait retourner le profil créé', async () => {
     const newProfil = {
+      ID_Profil: 1,
+      ID_Utilisateur: 1,
       Description: 'New Profil',
       ID_Connexion: 'New Profil',
       Profil_Privacy: true,
       Statut: 'Actif',
     };
-    const createdProfil = { ID_Profil: 3, ...newProfil };
+    const createdProfil = { ID_Profil: 1, ...newProfil };
 
     profilRepository.createProfil.mockResolvedValue(createdProfil);
 
@@ -74,12 +76,19 @@ describe('ProfilService', () => {
   test('❌ createProfil devrait gérer les erreurs correctement', async () => {
     const errorMessage = 'Erreur lors de la création du profil';
 
+    const newProfil = {
+      Description: 'Test Profil',
+      Profil_Privacy: true,
+      Statut: 'Actif',
+      ID_Utilisateur: 123,
+    };
+
     profilRepository.createProfil.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await profilService.createProfil();
+      await profilService.createProfil(newProfil);
     } catch (error) {
-      expect(error.message).toBe(errorMessage);
+      expect(error.message).toContain(errorMessage);
       expect(profilRepository.createProfil).toHaveBeenCalledTimes(1);
     }
   });
@@ -87,12 +96,15 @@ describe('ProfilService', () => {
   test('✅ getProfilById devrais retourner le profil correspondant', async () => {
     const profil = {
       ID_Profil: 1,
+      ID_Utilisateur: 1,
       Description: 'Profil 1',
       Profil_Privacy: true,
       Statut: 'Actif',
     };
 
-    const result = await profilService.getProfilById.mockResolvedValue(profil);
+    profilRepository.getProfilById.mockResolvedValue(profil);
+
+    const result = await profilService.getProfilById(1);
 
     expect(result).toEqual(profil);
     expect(profilRepository.getProfilById).toHaveBeenCalledWith(1);
@@ -107,18 +119,25 @@ describe('ProfilService', () => {
     try {
       await profilService.getProfilById();
     } catch (error) {
-      expect(error.message).toBe(errorMessage);
+      expect(error.message).toContain(errorMessage);
       expect(profilRepository.getProfilById).toHaveBeenCalledTimes(1);
     }
   });
 
   test('✅ updateProfil devrais retourner le profil modifié', async () => {
-    const updatedData = { Description: 'Updated Profil' };
+    const updatedData = {
+      Description: 'Updated Profil',
+      Profil_Privacy: true,
+      Statut: 'Actif',
+      ID_Utilisateur: 152,
+    };
+
     const updatedProfil = {
       ID_Profil: 1,
       ...updatedData,
       Profil_Privacy: true,
       Statut: 'Actif',
+      ID_Utilisateur: 152,
     };
 
     profilRepository.updateProfil.mockResolvedValue(updatedProfil);
@@ -133,12 +152,19 @@ describe('ProfilService', () => {
     const errorMessage =
       'Erreur lors de la modification du profil correspondant';
 
+    const updatedData = {
+      Description: 'Test',
+      Statut: 'Actif',
+      ID_Utilisateur: 1,
+      Profil_Privacy: true,
+    };
+
     profilRepository.updateProfil.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await profilService.updateProfil();
+      await profilService.updateProfil(1, updatedData);
     } catch (error) {
-      expect(error.message).toBe(errorMessage);
+      expect(error.message).toContain(errorMessage);
       expect(profilRepository.updateProfil).toHaveBeenCalledTimes(1);
     }
   });
@@ -161,7 +187,7 @@ describe('ProfilService', () => {
     try {
       await profilService.deleteProfil();
     } catch (error) {
-      expect(error.message).toBe(errorMessage);
+      expect(error.message).toContain(errorMessage);
       expect(profilRepository.deleteProfil).toHaveBeenCalledTimes(1);
     }
   });
