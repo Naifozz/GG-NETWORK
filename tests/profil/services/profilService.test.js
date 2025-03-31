@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import * as profilRepository from '../../../src/repositories/profilRepository.js';
-import { ProfilService } from '../../../src/services/ProfilService.js';
+import * as profilService from '../../../src/services/ProfilService.js';
 
 vi.mock('../repository/Profil', () => ({
   getAllProfils: vi.fn(),
@@ -11,10 +11,7 @@ vi.mock('../repository/Profil', () => ({
 }));
 
 describe('ProfilService', () => {
-  let service;
-
   beforeEach(() => {
-    service = new ProfilService();
     vi.clearAllMocks();
   });
 
@@ -37,7 +34,7 @@ describe('ProfilService', () => {
 
     profilRepository.getAllProfils.mockResolvedValue(mockProfils);
 
-    const result = await service.getAllProfils();
+    const result = await profilService.getAllProfils();
 
     expect(result).toEqual(mockProfils);
     expect(profilRepository.getAllProfils).toHaveBeenCalledTimes(1);
@@ -50,7 +47,7 @@ describe('ProfilService', () => {
     profilRepository.getAllProfils.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await service.getAllProfils();
+      await profilService.getAllProfils();
     } catch (error) {
       expect(error.message).toBe(errorMessage);
       expect(profilRepository.getAllProfils).toHaveBeenCalledTimes(1);
@@ -68,7 +65,7 @@ describe('ProfilService', () => {
 
     profilRepository.createProfil.mockResolvedValue(createdProfil);
 
-    const result = await service.createProfil(newProfil);
+    const result = await profilService.createProfil(newProfil);
 
     expect(result).toEqual(createdProfil);
     expect(profilRepository.createProfil).toHaveBeenCalledWith(newProfil);
@@ -80,7 +77,7 @@ describe('ProfilService', () => {
     profilRepository.createProfil.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await service.createProfil();
+      await profilService.createProfil();
     } catch (error) {
       expect(error.message).toBe(errorMessage);
       expect(profilRepository.createProfil).toHaveBeenCalledTimes(1);
@@ -95,7 +92,7 @@ describe('ProfilService', () => {
       Statut: 'Actif',
     };
 
-    const result = await service.getProfilById.mockResolvedValue(profil);
+    const result = await profilService.getProfilById.mockResolvedValue(profil);
 
     expect(result).toEqual(profil);
     expect(profilRepository.getProfilById).toHaveBeenCalledWith(1);
@@ -108,7 +105,7 @@ describe('ProfilService', () => {
     profilRepository.getProfilById.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await service.getProfilById();
+      await profilService.getProfilById();
     } catch (error) {
       expect(error.message).toBe(errorMessage);
       expect(profilRepository.getProfilById).toHaveBeenCalledTimes(1);
@@ -126,7 +123,7 @@ describe('ProfilService', () => {
 
     profilRepository.updateProfil.mockResolvedValue(updatedProfil);
 
-    const result = await service.updateProfil(1, updatedData);
+    const result = await profilService.updateProfil(1, updatedData);
 
     expect(result).toEqual(updatedProfil);
     expect(profilRepository.updateProfil).toHaveBeenCalledWith(1, updatedData);
@@ -139,7 +136,7 @@ describe('ProfilService', () => {
     profilRepository.updateProfil.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await service.updateProfil();
+      await profilService.updateProfil();
     } catch (error) {
       expect(error.message).toBe(errorMessage);
       expect(profilRepository.updateProfil).toHaveBeenCalledTimes(1);
@@ -149,7 +146,7 @@ describe('ProfilService', () => {
   test('✅ deleteProfil devrait supprimer un profil', async () => {
     profilRepository.deleteProfil.mockResolvedValue({ ID_Profil: 1 });
 
-    const result = await service.deleteProfil(1);
+    const result = await profilService.deleteProfil(1);
 
     expect(result).toEqual({ ID_Profil: 1 });
     expect(profilRepository.deleteProfil).toHaveBeenCalledWith(1);
@@ -162,7 +159,7 @@ describe('ProfilService', () => {
     profilRepository.deleteProfil.mockRejectedValue(new Error(errorMessage));
 
     try {
-      await service.deleteProfil();
+      await profilService.deleteProfil();
     } catch (error) {
       expect(error.message).toBe(errorMessage);
       expect(profilRepository.deleteProfil).toHaveBeenCalledTimes(1);
