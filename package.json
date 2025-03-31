@@ -17,7 +17,6 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "commit": "cz",
-    "init": "node config/database.js",
     "lint-staged": "lint-staged"
   },
   "lint-staged": {
