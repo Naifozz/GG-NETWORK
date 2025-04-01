@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import prisma from './prisma';
+import bcrypt from 'bcrypt';
 
 export const utilisateurSchema = z.object({
   nom: z
@@ -34,6 +35,22 @@ export const utilisateurSchema = z.object({
     .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
       message: "L'email doit être valide (ex: exemple@gaming.com)",
     }),
+
+  password: z
+    .string()
+    .min(8, {
+      message: 'Le mot de passe doit contenir au moins 8 caractères',
+    })
+    .regex(/[A-Z]/, {
+      message: 'Le mot de passe doit contenir au moins une lettre majuscule',
+    })
+    .regex(/\d/, {
+      message: 'Le mot de passe doit contenir au moins un chiffre',
+    })
+    .regex(/[!@#$%^&*]/, {
+      message:
+        'Le mot de passe doit contenir au moins un caractère spécial (ex: !@#$%^&*)',
+    }),
 });
 
 export const validateUtilisateur = async (Utilisateur) => {
@@ -48,22 +65,20 @@ export const validateUtilisateur = async (Utilisateur) => {
     }
   }
 
-  const [utilisateurExistant, emailExistant] = await Promise.all([
-    prisma.Utilisateur.findUnique({
-      where: { nom: Utilisateur.nom },
-    }),
-    prisma.Utilisateur.findUnique({
-      where: { email: Utilisateur.email },
-    }),
-  ]);
-  console.log('Utilisateur existant:', utilisateurExistant);
-  console.log('Email existant:', emailExistant);
+  const utilisateurExistant = await prisma.Utilisateur.findUnique({
+    where: { email: Utilisateur.email },
+  });
 
   if (utilisateurExistant) {
-    erreur.push("Ce nom d'utilisateur est déjà utilisé");
-  }
-  if (emailExistant) {
     erreur.push('Cet email est déjà utilisé');
+
+    // ✅ Vérification du mot de passe hashé avec bcrypt
+    if (
+      await bcrypt.compare(Utilisateur.password, utilisateurExistant.password)
+    ) {
+      erreur.push('Vous avez déjà utilisé ce mot de passe auparavant !');
+    }
   }
+
   return erreur;
 };
