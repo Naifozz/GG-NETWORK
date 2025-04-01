@@ -149,7 +149,7 @@ model Groupe {
   ID_Group     Int          @id @default(autoincrement())
   Nom          String
   Description  String?
-  Etat         String       // 'Public' ou 'Privé'
+  Etat         Boolean       // 'Public' ou 'Privé'
   Utilisateurs UserGroupe[]
   Concours     Concours[]
 
