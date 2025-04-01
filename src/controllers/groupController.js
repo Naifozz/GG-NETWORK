@@ -13,7 +13,7 @@ export const getGroups = async (req, res) => {
 };
 
 export const getGroupById = async (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id, 10);
   try {
     const group = await groupService.getGroupById(id);
     res.status(200).json(group);
@@ -30,15 +30,9 @@ export const getGroupById = async (req, res) => {
 };
 
 export const createGroup = async (req, res) => {
-  const data = {
-    ...req.body,
-    Etat: true,
-    ID_Utilisateur: 1,
-  };
-
   try {
-    const group = await groupService.createGroup(data);
-    res.status(201).json(group);
+    const group = await groupService.createGroup(req.body);
+    res.status(200).json(group);
   } catch (error) {
     console.error('Error creating group', error);
     res.status(500).json({ message: 'Erreur lors de la création du groupe' });
@@ -46,7 +40,8 @@ export const createGroup = async (req, res) => {
 };
 
 export const updateGroup = async (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id, 10);
+
   const data = req.body;
   try {
     const group = await groupService.updateGroup(id, data);
@@ -64,7 +59,7 @@ export const updateGroup = async (req, res) => {
 };
 
 export const deleteGroup = async (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id, 10);
   try {
     const group = await groupService.deleteGroup(id);
     res.status(200).json(group);
