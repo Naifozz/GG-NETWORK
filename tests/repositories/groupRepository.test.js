@@ -34,8 +34,8 @@ describe('Repository Group', () => {
   describe('getGroups', () => {
     test('✅ Récupération de tous les groupes avec succès', async () => {
       const mockGroups = [
-        { ID_Group: 1, Nom: 'Groupe 1', Etat: 'Public' },
-        { ID_Group: 2, Nom: 'Groupe 2', Etat: 'Prive' },
+        { ID_Group: 1, Nom: 'Groupe 1', Etat: true, ID_Utilisateur: 1 },
+        { ID_Group: 2, Nom: 'Groupe 2', Etat: false, ID_Utilisateur: 2 },
       ];
       prisma.groupe.findMany.mockResolvedValue(mockGroups);
 
@@ -59,7 +59,8 @@ describe('Repository Group', () => {
         ID_Group: 1,
         Nom: 'Groupe 1',
         Description: 'Description test',
-        Etat: 'Public',
+        Etat: true,
+        ID_Utilisateur: 1,
       };
       prisma.groupe.findUnique.mockResolvedValue(mockGroup);
 
@@ -85,7 +86,8 @@ describe('Repository Group', () => {
       const groupData = {
         Nom: 'Nouveau Groupe',
         Description: 'Description valide',
-        Etat: 'Public',
+        Etat: true,
+        ID_Utilisateur: 1, // ID de l'utilisateur requis
       };
       const mockGroup = {
         ID_Group: 1,
@@ -104,33 +106,31 @@ describe('Repository Group', () => {
       expect(result).toEqual(mockGroup);
     });
 
-    test('✅ Création avec état par défaut si non spécifié', async () => {
-      const groupData = { Nom: 'Nouveau Groupe' };
-      const mockGroup = {
-        ID_Group: 1,
+    test('❌ Échec de la création sans ID_Utilisateur', async () => {
+      const groupData = {
         Nom: 'Nouveau Groupe',
-        Etat: 'Public',
-        Description: null,
+        Description: 'Description valide',
+        Etat: true,
       };
-      prisma.groupe.create.mockResolvedValue(mockGroup);
+      prisma.groupe.create.mockRejectedValue(
+        new Error("L'ID de l'utilisateur est requis"),
+      );
 
-      const result = await createGroup({ ...groupData, Etat: 'Public' });
-
-      expect(prisma.groupe.create).toHaveBeenCalledWith({
-        data: { ...groupData, Etat: 'Public' },
-      });
-      expect(result).toEqual(mockGroup);
+      await expect(createGroup(groupData)).rejects.toThrow(
+        "L'ID de l'utilisateur est requis",
+      );
     });
   });
 
   describe('updateGroup', () => {
     test("✅ Mise à jour partielle d'un groupe", async () => {
-      const updateData = { Nom: 'Groupe Modifié' };
+      const updateData = { Nom: 'Groupe Modifié', Etat: false };
       const mockUpdatedGroup = {
         ID_Group: 1,
         Nom: 'Groupe Modifié',
         Description: 'Ancienne description',
-        Etat: 'Public',
+        Etat: false,
+        ID_Utilisateur: 1,
       };
       prisma.groupe.update.mockResolvedValue(mockUpdatedGroup);
 
@@ -140,29 +140,28 @@ describe('Repository Group', () => {
         where: { ID_Group: 1 },
         data: updateData,
       });
-      expect(result.Nom).toBe('Groupe Modifié');
+      expect(result).toEqual(mockUpdatedGroup);
     });
 
-    test("✅ Mise à jour de l'état seulement", async () => {
-      const updateData = { Etat: 'Prive' };
-      prisma.groupe.update.mockResolvedValue({
-        ID_Group: 1,
-        Nom: 'Groupe Original',
-        Etat: 'Prive',
-      });
+    test('❌ Échec de la mise à jour sans ID_Utilisateur', async () => {
+      const updateData = { Nom: 'Groupe Modifié' };
+      prisma.groupe.update.mockRejectedValue(
+        new Error("L'ID de l'utilisateur est requis"),
+      );
 
-      const result = await updateGroup(1, updateData);
-
-      expect(result.Etat).toBe('Prive');
+      await expect(updateGroup(1, updateData)).rejects.toThrow(
+        "L'ID de l'utilisateur est requis",
+      );
     });
   });
 
   describe('deleteGroup', () => {
-    test("✅ Suppression d'un groupe avec relations", async () => {
+    test("✅ Suppression d'un groupe avec succès", async () => {
       const mockDeletedGroup = {
         ID_Group: 1,
         Nom: 'Groupe Supprimé',
-        Etat: 'Public',
+        Etat: true,
+        ID_Utilisateur: 1,
       };
       prisma.groupe.delete.mockResolvedValue(mockDeletedGroup);
 
