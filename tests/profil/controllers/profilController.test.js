@@ -145,7 +145,7 @@ describe('Profil Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Erreur lors de la récupération du profil avec l'ID 1",
+        message: "Erreur lors de la récupération du profil avec l'ID",
         error: 'Erreur interne',
       });
     });
@@ -185,7 +185,7 @@ describe('Profil Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Erreur lors de la mise à jour du profil avec l'ID 1",
+        message: "Erreur lors de la mise à jour du profil avec l'ID",
         error: 'Erreur lors de la mise à jour',
       });
     });
@@ -226,7 +226,7 @@ describe('Profil Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Erreur lors de la suppression du profil avec l'ID 1",
+        message: "Erreur lors de la suppression du profil avec l'ID",
         error: 'Erreur lors de la suppression',
       });
     });
