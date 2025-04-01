@@ -5,7 +5,7 @@ import {
   createGroup,
   updateGroup,
   deleteGroup,
-} from '../../src/repositories/groupRepository.js';
+} from '../../../src/repositories/groupRepository.js';
 import { PrismaClient } from '@prisma/client';
 
 // Mock PrismaClient

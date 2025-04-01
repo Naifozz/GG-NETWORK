@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { validateGroupe } from '../../src/models/groupModels.js';
+import { validateGroupe } from '../../../src/models/groupModels.js';
 
 describe('Validation du modèle Groupe', () => {
   test("✅ Validation d'un groupe valide (minimal)", async () => {
