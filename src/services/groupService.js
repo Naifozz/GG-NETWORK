@@ -14,6 +14,9 @@ export const getGroups = async () => {
 export const getGroupById = async (id) => {
   try {
     const group = await groupRepository.getGroupById(id);
+    if (!group) {
+      throw { status: 404, message: `Groupe avec l'ID ${id} introuvable` };
+    }
     return group;
   } catch (error) {
     console.error('Error getting group', error);
@@ -23,7 +26,7 @@ export const getGroupById = async (id) => {
 
 export const createGroup = async (data) => {
   try {
-    const validatedGroupe = validateGroupe(data);
+    const validatedGroupe = await validateGroupe(data);
 
     const group = await groupRepository.createGroup(validatedGroupe);
     return group;
@@ -35,7 +38,12 @@ export const createGroup = async (data) => {
 
 export const updateGroup = async (id, data) => {
   try {
-    const validatedGroupe = validateGroupe(data);
+    const existanceGroup = await groupRepository.getGroupById(id);
+    if (!existanceGroup) {
+      throw { status: 404, message: `Groupe avec l'ID ${id} introuvable` };
+    }
+
+    const validatedGroupe = await validateGroupe(data);
     const group = await groupRepository.updateGroup(id, validatedGroupe);
     return group;
   } catch (error) {
@@ -46,6 +54,10 @@ export const updateGroup = async (id, data) => {
 
 export const deleteGroup = async (id) => {
   try {
+    const existanceGroup = await groupRepository.getGroupById(id);
+    if (!existanceGroup) {
+      throw { status: 404, message: `Groupe avec l'ID ${id} introuvable` };
+    }
     const group = await groupRepository.deleteGroup(id);
     return group;
   } catch (error) {
