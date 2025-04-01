@@ -125,7 +125,14 @@ test("✅ Création d'un groupe avec succès", async () => {
   };
   groupService.createGroup.mockResolvedValue(mockGroup);
 
-  const req = { body: { Nom: 'Groupe 1', Description: 'Description test' } };
+  const req = {
+    body: {
+      Nom: 'Groupe 1',
+      Description: 'Description test',
+      Etat: true,
+      ID_Utilisateur: 1,
+    },
+  };
   const res = {
     status: vi.fn().mockReturnThis(),
     json: vi.fn(),
@@ -146,7 +153,14 @@ test("✅ Création d'un groupe avec succès", async () => {
 test("❌ Échec de la création d'un groupe (erreur serveur)", async () => {
   groupService.createGroup.mockRejectedValue(new Error('Erreur serveur'));
 
-  const req = { body: { Nom: 'Groupe 1', Description: 'Description test' } };
+  const req = {
+    body: {
+      Nom: 'Groupe 1',
+      Description: 'Description test',
+      Etat: true,
+      ID_Utilisateur: 1,
+    },
+  };
   const res = {
     status: vi.fn().mockReturnThis(),
     json: vi.fn(),
