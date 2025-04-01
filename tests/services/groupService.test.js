@@ -17,8 +17,8 @@ afterEach(() => {
 
 test('✅ Récupération de tous les groupes avec succès', async () => {
   const mockGroups = [
-    { ID_Group: 1, Nom: 'Groupe 1', Etat: true },
-    { ID_Group: 2, Nom: 'Groupe 2', Etat: false },
+    { ID_Group: 1, Nom: 'Groupe 1', Etat: true, ID_Utilisateur: 1 },
+    { ID_Group: 2, Nom: 'Groupe 2', Etat: false, ID_Utilisateur: 2 },
   ];
   groupRepository.getGroups.mockResolvedValue(mockGroups);
 
@@ -42,6 +42,7 @@ test("✅ Récupération d'un groupe par ID avec succès", async () => {
     Nom: 'Groupe 1',
     Description: 'Description test',
     Etat: true,
+    ID_Utilisateur: 1,
   };
   groupRepository.getGroupById.mockResolvedValue(mockGroup);
 
@@ -64,6 +65,7 @@ test("✅ Création d'un nouveau groupe avec succès", async () => {
     Nom: 'Nouveau Groupe',
     Description: 'Description valide',
     Etat: true,
+    ID_Utilisateur: 1, // ID de l'utilisateur requis
   };
   const mockGroup = {
     ID_Group: 1,
@@ -77,26 +79,26 @@ test("✅ Création d'un nouveau groupe avec succès", async () => {
   expect(result).toEqual(mockGroup);
 });
 
-test("❌ Échec de la création d'un groupe", async () => {
+test("❌ Échec de la création d'un groupe sans ID_Utilisateur", async () => {
   const groupData = {
     Nom: 'Nouveau Groupe',
     Description: 'Description valide',
     Etat: true,
   };
-  const error = new Error('Erreur lors de la création du groupe');
-  groupRepository.createGroup.mockRejectedValue(error);
-
-  await expect(groupService.createGroup(groupData)).rejects.toThrow(error);
-  expect(groupRepository.createGroup).toHaveBeenCalledWith(groupData);
+  await expect(groupService.createGroup(groupData)).rejects.toThrow(
+    "L'ID de l'utilisateur est requis",
+  );
+  expect(groupRepository.createGroup).not.toHaveBeenCalled();
 });
 
 test("✅ Mise à jour d'un groupe avec succès", async () => {
-  const updateData = { Nom: 'Groupe Modifié', Etat: true };
+  const updateData = { Nom: 'Groupe Modifié', Etat: true, ID_Utilisateur: 1 };
   const mockUpdatedGroup = {
     ID_Group: 1,
     Nom: 'Groupe Modifié',
     Description: 'Ancienne description',
     Etat: true,
+    ID_Utilisateur: 1,
   };
   groupRepository.updateGroup.mockResolvedValue(mockUpdatedGroup);
 
@@ -106,13 +108,12 @@ test("✅ Mise à jour d'un groupe avec succès", async () => {
   expect(result).toEqual(mockUpdatedGroup);
 });
 
-test("❌ Échec de la mise à jour d'un groupe", async () => {
-  const updateData = { Nom: 'Groupe Modifié', Etat: true };
-  const error = new Error('Erreur lors de la mise à jour du groupe');
-  groupRepository.updateGroup.mockRejectedValue(error);
-
-  await expect(groupService.updateGroup(1, updateData)).rejects.toThrow(error);
-  expect(groupRepository.updateGroup).toHaveBeenCalledWith(1, updateData);
+test("❌ Échec de la mise à jour d'un groupe sans ID_Utilisateur", async () => {
+  const updateData = { Nom: 'Groupe Modifié' };
+  await expect(groupService.updateGroup(1, updateData)).rejects.toThrow(
+    "L'ID de l'utilisateur est requis",
+  );
+  expect(groupRepository.updateGroup).not.toHaveBeenCalled();
 });
 
 test("✅ Suppression d'un groupe avec succès", async () => {
@@ -120,6 +121,7 @@ test("✅ Suppression d'un groupe avec succès", async () => {
     ID_Group: 1,
     Nom: 'Groupe Supprimé',
     Etat: true,
+    ID_Utilisateur: 1,
   };
   groupRepository.deleteGroup.mockResolvedValue(mockDeletedGroup);
 
