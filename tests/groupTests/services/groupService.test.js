@@ -1,9 +1,9 @@
 import { test, expect, vi, afterEach } from 'vitest';
-import * as groupRepository from '../../src/repositories/groupRepository.js';
-import * as groupService from '../../src/services/groupService.js';
+import * as groupRepository from '../../../src/repositories/groupRepository.js';
+import * as groupService from '../../../src/services/groupService.js';
 
 // Mock des fonctions du repository
-vi.mock('../../src/repositories/groupRepository.js', () => ({
+vi.mock('../../../src/repositories/groupRepository.js', () => ({
   getGroups: vi.fn(),
   getGroupById: vi.fn(),
   createGroup: vi.fn(),
