@@ -28,6 +28,15 @@ const groupeSchema = z.object({
       }),
     })
     .default(true), // Par défaut, l'état est "Public" (true)
+
+  // ID de l'utilisateur qui a créé le groupe
+  ID_Utilisateur: z
+    .number({
+      required_error: "L'ID de l'utilisateur est requis",
+      invalid_type_error: "L'ID de l'utilisateur doit être un nombre",
+    })
+    .int({ message: "L'ID de l'utilisateur doit être un entier" })
+    .positive({ message: "L'ID de l'utilisateur doit être un entier positif" }),
 });
 
 export const validateGroupe = async (data) => {
