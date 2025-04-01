@@ -13,7 +13,7 @@ model Utilisateur {
   Pseudo               String
   Email                String                    @unique
   Password             String
-  Birth_Date           Int
+  Birth_Date           DateTime
   Num_Tel              Int
   Verif_ID             Boolean?
   Profil               Profil?
@@ -28,6 +28,7 @@ model Utilisateur {
   CommentaireLikes     CommentaireLikes[]
   UserGroupes          UserGroupe[]
   ConcoursUtilisateurs ConcoursUtilisateur[]
+  Groupes              Groupe[]                  @relation("UtilisateurGroupe")
 }
 
 model Profil {
@@ -150,6 +151,8 @@ model Groupe {
   Nom          String
   Description  String?
   Etat         Boolean       // 'Public' ou 'Privé'
+  ID_Utilisateur Int
+  Utilisateur Utilisateur @relation("UtilisateurGroupe", fields: [ID_Utilisateur], references: [ID_Utilisateur])
   Utilisateurs UserGroupe[]
   Concours     Concours[]
 
