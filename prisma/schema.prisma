@@ -13,7 +13,7 @@ model Utilisateur {
   Pseudo               String
   Email                String                    @unique
   Password             String
-  Birth_Date           Int
+  Birth_Date           DateTime
   Num_Tel              Int
   Verif_ID             Boolean?
   Profil               Profil?
@@ -28,6 +28,7 @@ model Utilisateur {
   CommentaireLikes     CommentaireLikes[]
   UserGroupes          UserGroupe[]
   ConcoursUtilisateurs ConcoursUtilisateur[]
+  Groupes              Groupe[]                  @relation("UtilisateurGroupe")
 }
 
 model Profil {
@@ -149,6 +150,9 @@ model Groupe {
   ID_Group     Int          @id @default(autoincrement())
   Nom          String
   Description  String?
+  Etat         Boolean       // 'Public' ou 'Privé'
+  ID_Utilisateur Int
+  Utilisateur Utilisateur @relation("UtilisateurGroupe", fields: [ID_Utilisateur], references: [ID_Utilisateur])
   Utilisateurs UserGroupe[]
   Concours     Concours[]
 
@@ -158,6 +162,7 @@ model Groupe {
 model UserGroupe {
   ID_Utilisateur Int
   ID_Group       Int
+  IsMod          Boolean
   Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
   Groupe         Groupe      @relation(fields: [ID_Group], references: [ID_Group])
 
@@ -172,7 +177,6 @@ model Concours {
   ID_Group             Int
   ID_Modo              Int
   Groupe               Groupe                @relation(fields: [ID_Group], references: [ID_Group])
-  Moderateur           Moderateur            @relation(fields: [ID_Modo], references: [ID_Modo])
   ConcoursUtilisateurs ConcoursUtilisateur[]
 }
 
@@ -185,13 +189,6 @@ model ConcoursUtilisateur {
   @@id([ID_Concours, ID_Utilisateur])
 }
 
-model Moderateur {
-  ID_Modo      Int           @id @default(autoincrement())
-  Nom          String
-  Email        String        @unique
-  Concours     Concours[]
-  MarketPlaces MarketPlace[] // Add the reverse relation
-}
 
 model Abonnement {
   ID_Utilisateur Int
@@ -227,6 +224,5 @@ model MarketPlace {
   ID_Modo        Int
   ID_Group       Int
   Produit        Produit    @relation(fields: [ID_Produit], references: [ID_Produit])
-  Moderateur     Moderateur @relation(fields: [ID_Modo], references: [ID_Modo])
   Groupe         Groupe     @relation(fields: [ID_Group], references: [ID_Group])
 }
