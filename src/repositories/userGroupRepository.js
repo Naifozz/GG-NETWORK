@@ -36,6 +36,25 @@ export const getUserGroupsByGroupId = async (groupId) => {
   }
 };
 
+export const updateUserGroup = async (data) => {
+  try {
+    const userGroup = await prisma.userGroupe.update({
+      where: {
+        ID_Utilisateur_ID_Group: {
+          ID_Utilisateur: data.ID_Utilisateur,
+          ID_Group: data.ID_Group,
+        },
+      },
+      data: {
+        IsMod: data.IsMod, // Fournissez les données à mettre à jour
+      },
+    });
+    return userGroup;
+  } catch (error) {
+    console.error('Error updating user group', error);
+    throw error;
+  }
+};
 export const createUserGroup = async (data) => {
   try {
     const userGroup = await prisma.userGroupe.create({
@@ -63,7 +82,7 @@ export const deleteUserGroupById = async (id) => {
 export const deleteUserGroupByGroupId = async (groupId) => {
   try {
     const userGroups = await prisma.userGroupe.deleteMany({
-      where: { ID_Groupe: groupId },
+      where: { ID_Group: groupId },
     });
     return userGroups;
   } catch (error) {
