@@ -71,9 +71,18 @@ export const updateGroup = async (id, data) => {
       const newUserGroup = await userGroupRepository.getUserGroupsByUserId(
         data.ID_Utilisateur,
       );
-      if (newUserGroup) {
+
+      const userInGroup = newUserGroup.find((ug) => ug.ID_Group === id);
+      if (userInGroup) {
         // Met à jour l'entrée existante pour le nouvel utilisateur
         await userGroupRepository.updateUserGroup({
+          ID_Utilisateur: data.ID_Utilisateur,
+          ID_Group: id,
+          IsMod: true,
+        });
+      } else {
+        // Crée une nouvelle entrée pour le nouvel utilisateur
+        await userGroupRepository.createUserGroup({
           ID_Utilisateur: data.ID_Utilisateur,
           ID_Group: id,
           IsMod: true,
