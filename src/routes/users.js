@@ -1,19 +1,23 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+
+import {
+  createUtilisateurs,
+  deleteUtilisateurs,
+  getAllUtilisateurs,
+  updateUtilisateurs,
+  getUtilisateursById,
+} from '../controllers/userController.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
-router.get('/', async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (error) {
-    console.error('Error getting users', error);
-    res
-      .status(500)
-      .json({ error: 'Erreur lors de la récupération des utilisateurs.' });
-  }
-});
+router.get('/', getAllUtilisateurs);
+
+router.get('/:id', getUtilisateursById);
+
+router.post('/', createUtilisateurs);
+
+router.put('/:id', updateUtilisateurs);
+
+router.delete('/:id', deleteUtilisateurs);
 
 export default router;
