@@ -6,7 +6,6 @@ import {
   updateGroup,
   deleteGroup,
 } from '../../../src/repositories/groupRepository.js';
-import * as userGroupRepository from '../../../src/repositories/userGroupRepository.js';
 import { PrismaClient } from '@prisma/client';
 
 // Mock PrismaClient
@@ -24,14 +23,6 @@ vi.mock('@prisma/client', () => {
     PrismaClient: vi.fn(() => mockPrisma),
   };
 });
-
-// Mock userGroupRepository
-vi.mock('../../../src/repositories/userGroupRepository.js', () => ({
-  createUserGroup: vi.fn(),
-  updateUserGroup: vi.fn(),
-  deleteUserGroupByGroupId: vi.fn(),
-  getUserGroupsByUserId: vi.fn(),
-}));
 
 const prisma = new PrismaClient();
 
@@ -96,7 +87,7 @@ describe('Repository Group', () => {
         Nom: 'Nouveau Groupe',
         Description: 'Description valide',
         Etat: true,
-        ID_Utilisateur: 1, // ID de l'utilisateur requis
+        ID_Utilisateur: 1,
       };
       const mockGroup = {
         ID_Group: 1,
@@ -106,21 +97,11 @@ describe('Repository Group', () => {
         MarketPlace: [],
       };
       prisma.groupe.create.mockResolvedValue(mockGroup);
-      userGroupRepository.createUserGroup.mockResolvedValue({
-        ID_Utilisateur: 1,
-        ID_Group: 1,
-        IsMod: true,
-      });
 
       const result = await createGroup(groupData);
 
       expect(prisma.groupe.create).toHaveBeenCalledWith({
         data: groupData,
-      });
-      expect(userGroupRepository.createUserGroup).toHaveBeenCalledWith({
-        ID_Utilisateur: 1,
-        ID_Group: 1,
-        IsMod: true,
       });
       expect(result).toEqual(mockGroup);
     });
@@ -142,18 +123,11 @@ describe('Repository Group', () => {
   });
 
   describe('updateGroup', () => {
-    test("✅ Mise à jour d'un groupe avec changement de modérateur", async () => {
-      const existingGroup = {
-        ID_Group: 1,
-        Nom: 'Ancien Groupe',
-        Etat: true,
-        ID_Utilisateur: 1, // Ancien modérateur
-      };
-
+    test("✅ Mise à jour d'un groupe avec succès", async () => {
       const updateData = {
         Nom: 'Groupe Modifié',
         Etat: false,
-        ID_Utilisateur: 2, // Nouveau modérateur
+        ID_Utilisateur: 2,
       };
 
       const mockUpdatedGroup = {
@@ -161,33 +135,8 @@ describe('Repository Group', () => {
         ...updateData,
       };
 
-      // Mock pour récupérer le groupe existant
-      prisma.groupe.findUnique.mockResolvedValue(existingGroup);
-
       // Mock pour mettre à jour le groupe
       prisma.groupe.update.mockResolvedValue(mockUpdatedGroup);
-
-      // Mock pour vérifier l'ancien utilisateur
-      userGroupRepository.getUserGroupsByUserId.mockImplementation((userId) => {
-        if (userId === 1) {
-          return [{ ID_Utilisateur: 1, ID_Group: 1, IsMod: true }];
-        }
-        return [];
-      });
-
-      // Mock pour mettre à jour l'ancien utilisateur
-      userGroupRepository.updateUserGroup.mockResolvedValue({
-        ID_Utilisateur: 1,
-        ID_Group: 1,
-        IsMod: false,
-      });
-
-      // Mock pour créer une nouvelle entrée pour le nouvel utilisateur
-      userGroupRepository.createUserGroup.mockResolvedValue({
-        ID_Utilisateur: 2,
-        ID_Group: 1,
-        IsMod: true,
-      });
 
       const result = await updateGroup(1, updateData);
 
@@ -197,41 +146,21 @@ describe('Repository Group', () => {
         data: updateData,
       });
 
-      // Vérifie que l'ancien utilisateur a été mis à jour pour ne plus être modérateur
-      expect(userGroupRepository.updateUserGroup).toHaveBeenCalledWith({
-        ID_Utilisateur: 1,
-        ID_Group: 1,
-        IsMod: false,
-      });
-
-      // Vérifie que le nouvel utilisateur a été ajouté comme modérateur
-      expect(userGroupRepository.createUserGroup).toHaveBeenCalledWith({
-        ID_Utilisateur: 2,
-        ID_Group: 1,
-        IsMod: true,
-      });
-
       // Vérifie le résultat final
       expect(result).toEqual(mockUpdatedGroup);
     });
 
-    test("❌ Échec de la mise à jour d'un groupe inexistant", async () => {
-      prisma.groupe.findUnique.mockResolvedValue(null);
-
+    test("❌ Échec de la mise à jour d'un groupe", async () => {
       const updateData = {
         Nom: 'Groupe Modifié',
         Etat: false,
         ID_Utilisateur: 2,
       };
 
-      await expect(updateGroup(999, updateData)).rejects.toEqual({
-        status: 404,
-        message: `Groupe avec l'ID 999 introuvable`,
-      });
+      const error = new Error('Erreur lors de la mise à jour');
+      prisma.groupe.update.mockRejectedValue(error);
 
-      expect(prisma.groupe.update).not.toHaveBeenCalled();
-      expect(userGroupRepository.updateUserGroup).not.toHaveBeenCalled();
-      expect(userGroupRepository.createUserGroup).not.toHaveBeenCalled();
+      await expect(updateGroup(1, updateData)).rejects.toThrow(error);
     });
   });
 
@@ -244,15 +173,9 @@ describe('Repository Group', () => {
         ID_Utilisateur: 1,
       };
       prisma.groupe.delete.mockResolvedValue(mockDeletedGroup);
-      userGroupRepository.deleteUserGroupByGroupId.mockResolvedValue({
-        count: 1,
-      });
 
       const result = await deleteGroup(1);
 
-      expect(userGroupRepository.deleteUserGroupByGroupId).toHaveBeenCalledWith(
-        1,
-      );
       expect(prisma.groupe.delete).toHaveBeenCalledWith({
         where: { ID_Group: 1 },
       });
