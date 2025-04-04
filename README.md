@@ -13,10 +13,11 @@ Clone the repo
 Install project dependencies
 
 - `npm install`
+- `npm install @prisma/client cors dotenv express process zod vitest`
 
 Initiate database
 
-- `npm run init`
+- `prisma generate`
 
 Launch the API
 
@@ -29,10 +30,11 @@ Launch the API
 ├── 📂 [config](./config)<br>
 ├── 📂 [controllers](./controllers) <br>
 ├── 📂 [prisma](./hello-prisma) <br>
-├── 📂 [models](./models) <br>
-├── 📂 [repositories](./repositories) <br>
-├── 📂 [routes](./routes) <br>
-├── 📂 [services](./services) <br>
+├── 📂 [src](./src) <br>
+&emsp;&emsp; ├── 📂 [models](./src/models) <br>
+&emsp;&emsp; ├── 📂 [repositories](./src/repositories) <br>
+&emsp;&emsp; ├── 📂 [routes](./src/routes) <br>
+&emsp;&emsp; └──📂 [services](./src/services) <br>
 ├── 📂 [tests](./tests) <br>
 ├── 📂 [utils](./utils) <br>
 ├── 📄 [.gitignore](.gitignore) <br>

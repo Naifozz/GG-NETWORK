@@ -1,54 +1,55 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model Utilisateur {
-  ID_Utilisateur     Int      @id @default(autoincrement())
-  Nom                String
-  Pseudo             String
-  Email              String   @unique
-  Password           String
-  Birth_Date         Int
-  Num_Tel            Int
-  Verif_ID           Boolean?
-  Profil             Profil?
-  MessagesEnvoyes    Message[]            @relation("MessageExpediteur")
-  MessagesRecus      Destinataire[]
-  Abonnements        Abonnement[]
-  Notations          Notation[]
-  Publications       Publication[]
-  Commentaires       Commentaire[]
+  ID_Utilisateur       Int                       @id @default(autoincrement())
+  Nom                  String
+  Pseudo               String
+  Email                String                    @unique
+  Password             String
+  Birth_Date           DateTime
+  Num_Tel              Int
+  Verif_ID             Boolean?
+  Profil               Profil?
+  MessagesEnvoyes      Message[]                 @relation("MessageExpediteur")
+  MessagesRecus        Destinataire[]
+  Abonnements          Abonnement[]
+  Notations            Notation[]
+  Publications         Publication[]
+  Commentaires         Commentaire[]
   MessagesParticipants ParticipantConversation[]
-  PublicationLikes   PublicationLikes[]
-  CommentaireLikes   CommentaireLikes[]
-  UserGroupes        UserGroupe[]
+  PublicationLikes     PublicationLikes[]
+  CommentaireLikes     CommentaireLikes[]
+  UserGroupes          UserGroupe[]
   ConcoursUtilisateurs ConcoursUtilisateur[]
+  Groupes              Groupe[]                  @relation("UtilisateurGroupe")
 }
 
 model Profil {
-  ID_Profil      Int      @id @default(autoincrement())
+  ID_Profil      Int           @id @default(autoincrement())
   Description    String
   Img            String?
-  ID_Utilisateur Int      @unique  // Add @unique here to enforce one-to-one relation
+  ID_Utilisateur Int           @unique // Add @unique here to enforce one-to-one relation
   ID_Connexion   String?
   Profil_Privacy Boolean
-  Statut         String   // "En Ligne", "Playing", "Hors Ligne"
+  Statut         String // "En Ligne", "Playing", "Hors Ligne"
   Img_Banner     String?
-  Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Utilisateur    Utilisateur   @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
   ProfilsBadges  ProfilBadge[]
   Abonnements    Abonnement[]
 }
 
 model Badge {
-  ID_Badge   Int      @id @default(autoincrement())
-  Nom        String
+  ID_Badge    Int           @id @default(autoincrement())
+  Nom         String
   Description String
-  Img        String
+  Img         String
   ProfilBadge ProfilBadge[]
 }
 
@@ -62,95 +63,98 @@ model ProfilBadge {
 }
 
 model Message {
-  ID_Mess      Int         @id @default(autoincrement())
-  ID_Expediteur Int
-  Content      String
-  Date_Envoi   DateTime
-  Expediteur   Utilisateur @relation("MessageExpediteur", fields: [ID_Expediteur], references: [ID_Utilisateur])
-  Destinataires Destinataire[]
+  ID_Mess              Int                   @id @default(autoincrement())
+  ID_Expediteur        Int
+  Content              String
+  Date_Envoi           DateTime
+  Expediteur           Utilisateur           @relation("MessageExpediteur", fields: [ID_Expediteur], references: [ID_Utilisateur])
+  Destinataires        Destinataire[]
   MessagesConversation MessageConversation[]
 }
 
 model Destinataire {
-  ID_Mess       Int
+  ID_Mess        Int
   ID_Utilisateur Int
-  Statut        String // 'Non Lu' ou 'Lu'
-  Message       Message @relation(fields: [ID_Mess], references: [ID_Mess])
-  Utilisateur   Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Statut         String // 'Non Lu' ou 'Lu'
+  Message        Message     @relation(fields: [ID_Mess], references: [ID_Mess])
+  Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
 
   @@id([ID_Mess, ID_Utilisateur])
 }
 
 model Conversation {
-  ID_Conv        Int       @id @default(autoincrement())
-  Nom            String?
-  Date_Creation  DateTime
-  Participants   ParticipantConversation[]
-  Messages       MessageConversation[]
+  ID_Conv       Int                       @id @default(autoincrement())
+  Nom           String?
+  Date_Creation DateTime
+  Participants  ParticipantConversation[]
+  Messages      MessageConversation[]
 }
 
 model ParticipantConversation {
-  ID_Conv       Int
+  ID_Conv        Int
   ID_Utilisateur Int
-  Conversation  Conversation @relation(fields: [ID_Conv], references: [ID_Conv])
-  Utilisateur   Utilisateur  @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Conversation   Conversation @relation(fields: [ID_Conv], references: [ID_Conv])
+  Utilisateur    Utilisateur  @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
 
   @@id([ID_Conv, ID_Utilisateur])
 }
 
 model MessageConversation {
-  ID_Mess     Int
-  ID_Conv     Int
-  Message     Message @relation(fields: [ID_Mess], references: [ID_Mess])
+  ID_Mess      Int
+  ID_Conv      Int
+  Message      Message      @relation(fields: [ID_Mess], references: [ID_Mess])
   Conversation Conversation @relation(fields: [ID_Conv], references: [ID_Conv])
 
   @@id([ID_Mess, ID_Conv])
 }
 
 model Publication {
-  ID_Post    Int       @id @default(autoincrement())
-  Contenu    String
-  Date       DateTime
-  ID_Utilisateur Int
-  Utilisateur Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  ID_Post          Int                @id @default(autoincrement())
+  Contenu          String
+  Date             DateTime
+  ID_Utilisateur   Int
+  Utilisateur      Utilisateur        @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
   PublicationLikes PublicationLikes[]
-  Commentaires  Commentaire[]
+  Commentaires     Commentaire[]
 }
 
 model Commentaire {
-  ID_Com        Int       @id @default(autoincrement())
-  Contenu       String
-  ID_Utilisateur Int
-  ID_Post       Int
-  Publication   Publication @relation(fields: [ID_Post], references: [ID_Post])
-  Utilisateur   Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  ID_Com           Int                @id @default(autoincrement())
+  Contenu          String
+  ID_Utilisateur   Int
+  ID_Post          Int
+  Publication      Publication        @relation(fields: [ID_Post], references: [ID_Post])
+  Utilisateur      Utilisateur        @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
   CommentaireLikes CommentaireLikes[]
 }
 
 model PublicationLikes {
-  ID_Post      Int
+  ID_Post        Int
   ID_Utilisateur Int
-  Publication  Publication @relation(fields: [ID_Post], references: [ID_Post])
-  Utilisateur  Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Publication    Publication @relation(fields: [ID_Post], references: [ID_Post])
+  Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
 
   @@id([ID_Post, ID_Utilisateur])
 }
 
 model CommentaireLikes {
-  ID_Com        Int
+  ID_Com         Int
   ID_Utilisateur Int
-  Commentaire   Commentaire @relation(fields: [ID_Com], references: [ID_Com])
-  Utilisateur   Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Commentaire    Commentaire @relation(fields: [ID_Com], references: [ID_Com])
+  Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
 
   @@id([ID_Com, ID_Utilisateur])
 }
 
 model Groupe {
-  ID_Group      Int       @id @default(autoincrement())
-  Nom           String
-  Description   String?
-  Utilisateurs  UserGroupe[]
-  Concours      Concours[]
+  ID_Group     Int          @id @default(autoincrement())
+  Nom          String
+  Description  String?
+  Etat         Boolean       // 'Public' ou 'Privé'
+  ID_Utilisateur Int
+  Utilisateur Utilisateur @relation("UtilisateurGroupe", fields: [ID_Utilisateur], references: [ID_Utilisateur])
+  Utilisateurs UserGroupe[]
+  Concours     Concours[]
 
   MarketPlace MarketPlace[]
 }
@@ -158,46 +162,39 @@ model Groupe {
 model UserGroupe {
   ID_Utilisateur Int
   ID_Group       Int
+  IsMod          Boolean
   Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
-  Groupe         Groupe @relation(fields: [ID_Group], references: [ID_Group])
+  Groupe         Groupe      @relation(fields: [ID_Group], references: [ID_Group])
 
   @@id([ID_Utilisateur, ID_Group])
 }
 
 model Concours {
-  ID_Concours  Int      @id @default(autoincrement())
-  Nom          String
-  DateDebut    DateTime
-  DateFin      DateTime
-  ID_Group     Int
-  ID_Modo      Int
-  Groupe       Groupe    @relation(fields: [ID_Group], references: [ID_Group])
-  Moderateur   Moderateur @relation(fields: [ID_Modo], references: [ID_Modo])
+  ID_Concours          Int                   @id @default(autoincrement())
+  Nom                  String
+  DateDebut            DateTime
+  DateFin              DateTime
+  ID_Group             Int
+  ID_Modo              Int
+  Groupe               Groupe                @relation(fields: [ID_Group], references: [ID_Group])
   ConcoursUtilisateurs ConcoursUtilisateur[]
 }
 
 model ConcoursUtilisateur {
   ID_Utilisateur Int
   ID_Concours    Int
-  Concours       Concours  @relation(fields: [ID_Concours], references: [ID_Concours])
+  Concours       Concours    @relation(fields: [ID_Concours], references: [ID_Concours])
   Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
 
   @@id([ID_Concours, ID_Utilisateur])
 }
 
-model Moderateur {
-  ID_Modo       Int      @id @default(autoincrement())
-  Nom           String
-  Email         String   @unique
-  Concours      Concours[]
-  MarketPlaces  MarketPlace[]  // Add the reverse relation
-}
 
 model Abonnement {
   ID_Utilisateur Int
   ID_Profil      Int
   Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
-  Profil         Profil @relation(fields: [ID_Profil], references: [ID_Profil])
+  Profil         Profil      @relation(fields: [ID_Profil], references: [ID_Profil])
 
   @@id([ID_Utilisateur, ID_Profil])
 }
@@ -207,27 +204,25 @@ model Notation {
   ID_Utilisateur Int
   Note           Int
   Utilisateur    Utilisateur @relation(fields: [ID_Utilisateur], references: [ID_Utilisateur])
-  Produit        Produit @relation(fields: [ID_Produit], references: [ID_Produit])
+  Produit        Produit     @relation(fields: [ID_Produit], references: [ID_Produit])
 
   @@id([ID_Produit, ID_Utilisateur])
 }
 
 model Produit {
-  ID_Produit   Int      @id @default(autoincrement())
-  Nom          String
-  Description  String
-  Prix         Float
-  Marketplace  MarketPlace[]
-  Notations    Notation[]
+  ID_Produit  Int           @id @default(autoincrement())
+  Nom         String
+  Description String
+  Prix        Float
+  Marketplace MarketPlace[]
+  Notations   Notation[]
 }
 
 model MarketPlace {
-  ID_MarketPlace Int      @id @default(autoincrement())  // Add a unique ID
+  ID_MarketPlace Int        @id @default(autoincrement()) // Add a unique ID
   ID_Produit     Int
   ID_Modo        Int
   ID_Group       Int
-  Produit        Produit     @relation(fields: [ID_Produit], references: [ID_Produit])
-  Moderateur     Moderateur  @relation(fields: [ID_Modo], references: [ID_Modo])
-  Groupe         Groupe      @relation(fields: [ID_Group], references: [ID_Group])
+  Produit        Produit    @relation(fields: [ID_Produit], references: [ID_Produit])
+  Groupe         Groupe     @relation(fields: [ID_Group], references: [ID_Group])
 }
-
