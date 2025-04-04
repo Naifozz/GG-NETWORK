@@ -13,7 +13,6 @@
     "prepare": "npx husky-init && husky install",
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
     "commit": "cz",
