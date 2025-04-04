@@ -67,7 +67,7 @@ export const deleteUtilisateurs = async (req, res) => {
     const deleteUtilisateurs = await userService.deleteUtilisateurs(id);
 
     if (!deleteUtilisateurs) {
-      return res.status(404).join({ message: 'Utilisateur non trouvé' });
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
     res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
