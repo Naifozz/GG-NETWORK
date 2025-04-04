@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import prisma from './prisma';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
+const prisma = new PrismaClient();
 const today = new Date();
 const minDate = new Date();
 minDate.setFullYear(today.getFullYear() - 120);
