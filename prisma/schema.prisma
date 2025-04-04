@@ -6,6 +6,12 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+enum Country {
+  France
+  Belgique
+  Suisse
+  Corse
+}
 
 model Utilisateur {
   ID_Utilisateur       Int                       @id @default(autoincrement())
@@ -14,6 +20,7 @@ model Utilisateur {
   Email                String                    @unique
   Password             String
   Birth_Date           DateTime
+  Country              Country             
   Num_Tel              Int
   Verif_ID             Boolean?
   Profil               Profil?
